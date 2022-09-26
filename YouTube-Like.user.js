@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://sedatkilinc.de/
-// @version      0.6
+// @version      0.6.1
 // @description  Liking YouTube-Clips
 // @author       @Sedat_Kilinc
 // @match        https://*.youtube.com/watch*
@@ -77,33 +77,10 @@
                 findChannelName(ev.type);
                 lookForLikeButton(0);
             };
-    function setVideoEvent() {
-        arrEventType.forEach(type => {
-            document.querySelectorAll('video').forEach(vid => {
-                vid.addEventListener(type, videoListener);
-/*
-            vid.addEventListener('loadstart', videoListener);
-            vid.addEventListener('play', videoListener);
-            vid.addEventListener('playing', videoListener);
-            vid.addEventListener('canplay', videoListener);
-            vid.addEventListener('load', videoListener);
-            vid.addEventListener('selectionchange', videoListener);
-            // change
-            vid.addEventListener('change', videoListener);
-            // slotchange
-            vid.addEventListener('slotchange', videoListener);
- */
-
-            });
-        });
-    }
-
-    ////////////////////////////////////////////////////////
 
     const loadListener = (ev) => {
         console.log('SEDAT:this ', this);
         console.log('SEDAT:'+ ev.type + '•' + ev.target + '.addEventListener',ev);
-        //setVideoEvent();
         findChannelName(ev.target + '.' + ev.type);
         lookForLikeButton(0);
     }
@@ -117,7 +94,6 @@
 
     document.addEventListener('keyup', (ev) => {
         console.log('SEDAT:keyup event object', ev);
-        // setVideoEvent();
         findChannelName('onkeyup');
 
         if (ev.altKey === false || ev.code !== 'KeyL') {
