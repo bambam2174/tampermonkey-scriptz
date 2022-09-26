@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://sedatkilinc.de/
-// @version      0.6.1
+// @version      0.6.2
 // @description  Liking YouTube-Clips
 // @author       @Sedat_Kilinc
 // @match        https://*.youtube.com/watch*
 // @match        https://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @grant        @Sedat_Kilince
+// @grant        none
 // @supportURL   https://github.com/bambam2174/tampermonkey-scriptz/
 // @homepageURL  https://github.com/bambam2174
 // @updateURL 	 https://github.com/bambam2174/tampermonkey-scriptz/raw/main/YouTube-Like.user.js
