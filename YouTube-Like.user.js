@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://sedatkilinc.de/
-// @version      0.6.2
+// @version      0.6.3
 // @description  Liking YouTube-Clips
 // @author       @Sedat_Kilinc
 // @match        https://*.youtube.com/watch*
