@@ -40,33 +40,6 @@
 
 
 
-/*
-
-    Event play            type: 'play'
-    Event Loadstart       type: 'loadstart'
-    Event progress        type: 'progress'
-    Event progress        type: 'progress'
-    Event progress        type: 'progress'
-    Event Loadeddata      type: 'loadeddata'
-    Event playing         type: 'playing'
-
-*/
-    function removeVideoEventListeners() {
-
-
-        try {
-            arrEventType.forEach(t => {
-                document.querySelectorAll('video').forEach(vid => {
-                    vid.addEventListener(t, videoListener);
-                });
-            });
-
-            document.removeEventListener('click', listener);
-
-
-        } catch (error) {}
-    }
-
     const listener = e => {
         console.log('event ' + e.type, e.target, e);
     }
@@ -114,12 +87,11 @@
 
         let allAnchorTagsChannel = document.querySelectorAll('a[href^="/c"]');
         console.log('SEDAT allAnchorTagsChannel.length', allAnchorTagsChannel.length);
-        // let allAnchorTagsChanneName = document.querySelectorAll('#owner-and-teaser #owner ytd-channel-name#channel-name #container.style-scope.ytd-channel-name a');
-        // document.querySelectorAll('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string')
-        let allAnchorTagsChanneName = document.querySelectorAll('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
-        console.log('SEDAT allAnchorTagsChanneName.length', allAnchorTagsChanneName.length);
-        if (!found && allAnchorTagsChanneName.length >0) {
-            currentChannel = allAnchorTagsChanneName[0].href.split('/').pop();
+
+        let allAnchorTagsChannelName = document.querySelectorAll('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
+        console.log('SEDAT allAnchorTagsChannelName.length', allAnchorTagsChannelName.length);
+        if (!found && allAnchorTagsChannelName.length > 0) {
+            currentChannel = allAnchorTagsChannelName[0].href.split('/').pop();
             console.log('SEDAT currentChannel', currentChannel);
             if (arrChannels.indexOf(currentChannel) > -1) {
                 lookForLikeButton(1);
@@ -131,7 +103,7 @@
     function lookForLikeButton(action) {
         console.log('SEDAT:lookForLikeButton');
         // '#segmented-like-button ytd-toggle-button-renderer yt-button-shape button'
-        if (/*btnLike !== undefined ||*/ (btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0]) &&
+        if ((btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0]) &&
            (btnDisLike = document.querySelectorAll('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button')[0])) {
             console.log('btnLike = ', btnLike);
             switch(action) {
@@ -154,10 +126,6 @@
                     break;
             }
         }
-/*         else {
-            console.log('SEDAT: lookForLikeButton • false');
-            setTimeout(lookForLikeButton, 2000, action);
-        } */
     }
 
     function handleChannel(channelName) {
