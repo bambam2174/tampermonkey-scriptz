@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://sedatkilinc.de/
-// @version      0.6.3
+// @version      0.6.4
 // @description  Liking YouTube-Clips
 // @author       @Sedat_Kilinc
 // @match        https://*.youtube.com/watch*
@@ -103,8 +103,9 @@
     function lookForLikeButton(action) {
         console.log('SEDAT:lookForLikeButton');
         // '#segmented-like-button ytd-toggle-button-renderer yt-button-shape button'
-        if ((btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0]) &&
-           (btnDisLike = document.querySelectorAll('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button')[0])) {
+       //  '.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button'
+        if ((btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0]) &&
+           (btnDisLike = document.querySelectorAll('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[1])) {
             console.log('btnLike = ', btnLike);
             switch(action) {
                 case 1:
