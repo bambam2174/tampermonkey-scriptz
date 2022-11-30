@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://sedatkilinc.de/
-// @version      0.6.4
+// @version      0.6.6
 // @description  Liking YouTube-Clips
 // @author       @Sedat_Kilinc
 // @match        https://*.youtube.com/watch*
@@ -19,18 +19,21 @@
 
     console.log('SEDAT•YouTube');
 
+    let pressedAltR = false;
+
     let btnLike = undefined;
     let btnDisLike = undefined;
 
     const arrEventType = [ 'loadstart', 'play', 'playing', 'load', 'selectionchange', 'canplay', 'change', 'slotchange' ];
     const arrChannels = [ ];
+    const arrDislikeChannels = [ ];
 
     let currentChannel = '';
     let currentTitle = getTitle();
 
     if (localStorage.getItem('channels') === null) {
-        saveChannel('sedatkpunkt');
-        saveChannel('whatdamath');
+        saveChannel('@SedatKPunkt');
+        saveChannel('@garipthecat2067');
     } else {
         const tmpChannels = JSON.parse(localStorage.getItem('channels'));
         console.log('SEDAT: tmpChannels', tmpChannels);
@@ -58,6 +61,40 @@
         lookForLikeButton(0);
     }
 
+    const keyUpListener = ev => {
+        console.log('SEDAT:keyup event object', ev);
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        findChannelName('onkeyup');
+
+        if (ev.altKey === true && ev.code === 'KeyL') {
+            handleChannel(currentChannel);
+        };
+
+        if (ev.altKey === true && ev.code === 'KeyR') {
+            pressedAltR = true;
+        };
+
+        if (ev.altKey === true && pressedAltR && ev.code === 'KeyA') {
+            resetAllChannels();
+            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
+            pressedAltR = false;
+        };
+
+        if (ev.altKey === true && pressedAltR && ev.code === 'KeyC') {
+            resetLikedChannels();
+            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
+            pressedAltR = false;
+        };
+
+        if (ev.altKey === true && pressedAltR && ev.code === 'KeyD') {
+            resetDislikedChannels();
+            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
+            pressedAltR = false;
+        };
+    }
+
     window.addEventListener('load', loadListener);
 
     document.addEventListener('load', loadListener);
@@ -65,17 +102,7 @@
     // transitionend
     document.addEventListener('transitionend', loadListener);
 
-    document.addEventListener('keyup', (ev) => {
-        console.log('SEDAT:keyup event object', ev);
-        findChannelName('onkeyup');
-
-        if (ev.altKey === false || ev.code !== 'KeyL') {
-            return false;
-        };
-//        lookForLikeButton(1);
-//        saveChannel(channelName)
-        handleChannel(currentChannel);
-    });
+    document.addEventListener('keyup', keyUpListener);
 
     function findChannelName(from = 'default') {
         console.log('SEDAT: findChannelName', from);
@@ -95,6 +122,9 @@
             console.log('SEDAT currentChannel', currentChannel);
             if (arrChannels.indexOf(currentChannel) > -1) {
                 lookForLikeButton(1);
+            }
+            if (arrDislikeChannels.indexOf(currentChannel) > -1) {
+                lookForLikeButton(2);
             }
             found=true;
         }
@@ -135,6 +165,7 @@
             lookForLikeButton(1);
         } else {
             removeChannel(channelName);
+            saveDislikeChannel(channelName);
             lookForLikeButton(2);
         }
     }
@@ -147,13 +178,45 @@
         localStorage.setItem('channels',JSON.stringify(arrChannels));
     }
 
+    function saveDislikeChannel(channelName) {
+        if (arrDislikeChannels.indexOf(channelName) > -1) {
+            return;
+        }
+        arrDislikeChannels.push(channelName);
+        localStorage.setItem('dislikechannels',JSON.stringify(arrDislikeChannels));
+    }
+
+    function resetLikedChannels() {
+        arrChannels.splice(0, arrChannels.length);
+        localStorage.setItem('channels',JSON.stringify(arrChannels));
+        saveChannel('@SedatKPunkt');
+        saveChannel('@garipthecat2067');
+    }
+
+    function resetDislikedChannels() {
+        arrDislikeChannels.splice(0, arrDislikeChannels.length);
+        localStorage.setItem('dislikechannels',JSON.stringify(arrDislikeChannels));
+    }
+
+    function resetAllChannels() {
+        resetLikedChannels();
+        resetDislikedChannels();
+    }
 
     function removeChannel(channelName) {
         if (arrChannels.indexOf(channelName) < 0) {
             return;
         }
         arrChannels.splice(arrChannels.indexOf(channelName), 1);
-        localStorage.setItem('channels',JSON.stringify(arrChannels));
+        localStorage.setItem('channels', JSON.stringify(arrChannels));
+    }
+
+    function removeDislikeChannel(channelName) {
+        if (arrDislikeChannels.indexOf(channelName) < 0) {
+            return;
+        }
+        arrDislikeChannels.splice(arrDislikeChannels.indexOf(channelName), 1);
+        localStorage.setItem('dislikechannels', JSON.stringify(arrDislikeChannels));
     }
 
     function getTitle() {
