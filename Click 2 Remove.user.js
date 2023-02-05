@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Ciick 2 Remove
+// @name         Click 2 Remove
 // @namespace    http://bambam2174.github.io/
 // @version      0.1
 // @description  try to take over the world!
