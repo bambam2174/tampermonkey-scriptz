@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Click 2 Remove
 // @namespace    http://bambam2174.github.io/
-// @version      0.1
-// @description  try to take over the world!
-// @author       You
+// @version      0.1.1
+// @description  Mark & unmark HTML element with Alt+Click. Remove marked elements with Alt+Shift+R
+// @author       Sedat Kpunkt <bambam2174@gmail.com>
 // @match        https://*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tagesspiegel.de
 // @grant        none
@@ -12,19 +12,13 @@
 (function() {
     'use strict';
 
-
     document.lastEventType = document.lastEventType || 'click';
     document.listClickedElements = document.listClickedElements || [];
-
-    Window.prototype.loadListener = Window.prototype.loadListener || function (ev) { alert('Loaded', ev)};
-
-    document.removeEventListener('load', window.loadListener);
-    document.addEventListener('load', window.loadListener);
 
     function eventListener(event) {
         console.log('event ' + event.type, event.target,'☞☛👉🏿👉🏾👉🏽👉🏼👉🏻👉—————————————————————👈👈🏻👈🏼👈🏽👈🏾👈🏿☚☜', event);
         if (!event.altKey) {
-            return;
+            return true;
         }
         event.preventDefault();
         event.stopPropagation();
@@ -39,6 +33,7 @@
             document.listClickedElements = document.listClickedElements.filter(el => el != clickedElement);
             console.log('document.listClickedElements.length', document.listClickedElements.length);
         }
+        return false;
     }
 
     function removeListeners(eventType = document.lastEventType, element = document, listener = eventListener) {
