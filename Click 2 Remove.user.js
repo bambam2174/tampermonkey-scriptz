@@ -7,6 +7,10 @@
 // @match        https://*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tagesspiegel.de
 // @grant        none
+// @supportURL   https://github.com/bambam2174/tampermonkey-scriptz/
+// @homepageURL  https://github.com/bambam2174
+// @updateURL 	 https://github.com/bambam2174/tampermonkey-scriptz/raw/main/Click%202%20Remove.user.js
+// @downloadURL  https://github.com/bambam2174/tampermonkey-scriptz/raw/main/Click%202%20Remove.user.js
 // ==/UserScript==
 
 (function() {
