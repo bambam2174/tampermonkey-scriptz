@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         YouTube-Like
-// @namespace    http://sedatkilinc.de/
-// @version      0.6.6
-// @description  Liking YouTube-Clips
-// @author       @Sedat_Kilinc
+// @namespace    http://bambam2174.github.io/
+// @version      0.6.7
+// @description  Automatic Like or Dislike of YouTube-Clips of selected channels
+// @author       Sedat Kpunkt <bambam2174@gmail.com>
 // @match        https://*.youtube.com/watch*
 // @match        https://*.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @grant        none
 // @supportURL   https://github.com/bambam2174/tampermonkey-scriptz/
-// @homepageURL  https://github.com/bambam2174
+// @homepageURL  http://bambam2174.github.io
 // @updateURL 	 https://github.com/bambam2174/tampermonkey-scriptz/raw/main/YouTube-Like.user.js
 // @downloadURL  https://github.com/bambam2174/tampermonkey-scriptz/raw/main/YouTube-Like.user.js
 // ==/UserScript==
