@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube-Like
 // @namespace    http://bambam2174.github.io/
-// @version      0.6.7
+// @version      0.6.8.1
 // @description  Automatic Like or Dislike of YouTube-Clips of selected channels
 // @author       Sedat Kpunkt <bambam2174@gmail.com>
 // @match        https://*.youtube.com/watch*
@@ -17,7 +17,7 @@
 (function() {
     'use strict';
 
-    console.log('SEDAT•YouTube');
+    console.log('[SEDAT•YouTube-Like]•YouTube');
 
     let pressedAltR = false;
 
@@ -36,9 +36,9 @@
         saveChannel('@garipthecat2067');
     } else {
         const tmpChannels = JSON.parse(localStorage.getItem('channels'));
-        console.log('SEDAT: tmpChannels', tmpChannels);
+        console.log('[SEDAT•YouTube-Like]: tmpChannels', tmpChannels);
         tmpChannels.forEach(el => { arrChannels.push(el); });
-        console.log('SEDAT: arrChannels', arrChannels);
+        console.log('[SEDAT•YouTube-Like]: arrChannels', arrChannels);
     }
 
 
@@ -49,50 +49,59 @@
 
 
     const videoListener = ev => {
-                console.log('SEDAT:video•'+ ev.type, ev.target.baseURI.split('=').pop(), ev);
-                findChannelName(ev.type);
-                lookForLikeButton(0);
+        console.log('[SEDAT•YouTube-Like]:video•'+ ev.type, ev.target.baseURI.split('=').pop(), ev);
+        findChannelName(ev.type);
+        lookForLikeButton(0);
+        removeAdRendererAll();
             };
 
     const loadListener = (ev) => {
-        console.log('SEDAT:this ', this);
-        console.log('SEDAT:'+ ev.type + '•' + ev.target + '.addEventListener',ev);
+        console.log('[SEDAT•YouTube-Like]: Event '+ ev.type + '•' + ev.target + '.addEventListener',ev);
         findChannelName(ev.target + '.' + ev.type);
         lookForLikeButton(0);
+        removeAdRendererAll();
     }
 
     const keyUpListener = ev => {
-        console.log('SEDAT:keyup event object', ev);
-        ev.preventDefault();
-        ev.stopPropagation();
+        console.log('[SEDAT•YouTube-Like]:keyup event object', ev);
+/*        ev.preventDefault();
+        ev.stopPropagation();*/
 
         findChannelName('onkeyup');
 
-        if (ev.altKey === true && ev.code === 'KeyL') {
-            handleChannel(currentChannel);
+        if (ev.altKey === false) {
+            return;
         };
 
-        if (ev.altKey === true && ev.code === 'KeyR') {
-            pressedAltR = true;
-        };
+        console.log('[SEDAT•YouTube-Like]:alt key down', ev);
 
-        if (ev.altKey === true && pressedAltR && ev.code === 'KeyA') {
-            resetAllChannels();
-            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
-            pressedAltR = false;
-        };
-
-        if (ev.altKey === true && pressedAltR && ev.code === 'KeyC') {
-            resetLikedChannels();
-            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
-            pressedAltR = false;
-        };
-
-        if (ev.altKey === true && pressedAltR && ev.code === 'KeyD') {
-            resetDislikedChannels();
-            console.log('all channels reseted', localStorage, localStorage.channels, localStorage.dislikechannels);
-            pressedAltR = false;
-        };
+        switch (ev.code) {
+            case 'KeyL':
+                handleChannel(currentChannel);
+                pressedAltR = false;
+                break;
+            case 'KeyR':
+                pressedAltR = true;
+                break;
+            case 'KeyA':
+                pressedAltR && resetAllChannels();
+                (pressedAltR) ? console.log('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : console.log('Press Alt-R then Alt-D to delete all channels');
+                pressedAltR = false;
+                break;
+            case 'KeyC':
+                pressedAltR && resetLikedChannels();
+                (pressedAltR) ? console.log('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : console.log('Press Alt-R then Alt-D to delete all LIKE-channels');
+                pressedAltR = false;
+                break;
+            case 'KeyD':
+                pressedAltR && resetDislikedChannels();
+                (pressedAltR) ? console.log('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : console.log('Press Alt-R then Alt-D to delete all DISLIKE-channels');
+                pressedAltR = false;
+                break;
+            default:
+                pressedAltR = false;
+                break
+        }
     }
 
     window.addEventListener('load', loadListener);
@@ -105,21 +114,21 @@
     document.addEventListener('keyup', keyUpListener);
 
     function findChannelName(from = 'default') {
-        console.log('SEDAT: findChannelName', from);
+        console.log('[SEDAT•YouTube-Like]: findChannelName', from);
         let found = false;
 
         currentTitle = getTitle();
-        console.log('SEDAT: currentTitle', currentTitle);
-        console.log('SEDAT: saveTitle', saveTitle());
+        console.log('[SEDAT•YouTube-Like]: currentTitle', currentTitle);
+        console.log('[SEDAT•YouTube-Like]: saveTitle', saveTitle());
 
         let allAnchorTagsChannel = document.querySelectorAll('a[href^="/c"]');
-        console.log('SEDAT allAnchorTagsChannel.length', allAnchorTagsChannel.length);
+        console.log('[SEDAT•YouTube-Like] allAnchorTagsChannel.length', allAnchorTagsChannel.length);
 
         let allAnchorTagsChannelName = document.querySelectorAll('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
-        console.log('SEDAT allAnchorTagsChannelName.length', allAnchorTagsChannelName.length);
+        console.log('[SEDAT•YouTube-Like] allAnchorTagsChannelName.length', allAnchorTagsChannelName.length);
         if (!found && allAnchorTagsChannelName.length > 0) {
             currentChannel = allAnchorTagsChannelName[0].href.split('/').pop();
-            console.log('SEDAT currentChannel', currentChannel);
+            console.log('[SEDAT•YouTube-Like] currentChannel', currentChannel);
             if (arrChannels.indexOf(currentChannel) > -1) {
                 lookForLikeButton(1);
             }
@@ -131,35 +140,42 @@
     }
 
     function lookForLikeButton(action) {
-        console.log('SEDAT:lookForLikeButton');
+        console.log('[SEDAT•YouTube-Like]:lookForLikeButton');
         // '#segmented-like-button ytd-toggle-button-renderer yt-button-shape button'
        //  '.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button'
-        if ((btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0]) &&
-           (btnDisLike = document.querySelectorAll('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[1])) {
+        if ((btnLike = document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0]
+             || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0]
+            || document.querySelectorAll('segmented-like-dislike-button-view-model like-button-view-model > toggle-button-view-model button')[0]) &&
+           (btnDisLike = document.querySelectorAll('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button')[0]
+            || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[1])
+           ||document.querySelectorAll('segmented-like-dislike-button-view-model dislike-button-view-model > toggle-button-view-model button')[0]) {
             console.log('btnLike = ', btnLike);
             switch(action) {
                 case 1:
-                    console.log('SEDAT:lookForLikeButton • btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
+                    console.log('[SEDAT•YouTube-Like]:lookForLikeButton • btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
                     if (btnLike.ariaPressed === 'false') {
 
                         btnLike.click();
                     }
                     break;
                 case 2:
-                    console.log('SEDAT:lookForDisLikeButton • btnDisLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
+                    console.log('[SEDAT•YouTube-Like]:lookForDisLikeButton • btnDisLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
                     if (btnDisLike.ariaPressed === 'false') {
 
                         btnDisLike.click();
                     }
                     break;
                 default:
-                    console.log('SEDAT:lookForLikeButton • 1 btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));
+                    console.log('[SEDAT•YouTube-Like]:lookForLikeButton • 1 btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));
                     break;
             }
         }
     }
 
     function handleChannel(channelName) {
+        if (channelName == "") {
+            return;
+        }
         if (arrChannels.indexOf(channelName) < 0) {
             saveChannel(channelName);
             lookForLikeButton(1);
@@ -225,12 +241,29 @@
 
     function saveTitle() {
         currentTitle = getTitle() ;
-        console.log('SEDAT: saveTitle• CurrentTitle', currentTitle);
+        console.log('[SEDAT•YouTube-Like]: saveTitle• CurrentTitle', currentTitle);
         return currentTitle;
     }
 
     function isNewVideo() {
         return (currentTitle !== getTitle());
+    }
+
+    function removeAdRenderer() {
+        let adRenderer = document.querySelector('#rendering-content');
+        if (adRenderer != null) {
+            adRenderer.remove();
+        }
+    }
+
+    function removeAdRendererAll() {
+        let nlAdRenderer = document.querySelectorAll('#rendering-content');
+        nlAdRenderer.forEach(adRenderer => adRenderer.remove());
+    }
+
+    function ExecuteOnEachAdRenderer(onElementExecute) {
+        let nlAdRenderer = document.querySelectorAll('#rendering-content');
+        nlAdRenderer.forEach(onElementExecute);
     }
 })();
 
